@@ -1,0 +1,96 @@
+*{box-sizing:border-box}
+:root{--bg:#020617;--panel:rgba(15,23,42,.92);--line:rgba(148,163,184,.25);--text:#f8fafc;--muted:#94a3b8;--blue:#38bdf8;--green:#22c55e;--red:#ef4444}
+body{margin:0;font-family:Tahoma,Arial,sans-serif;color:var(--text);background:radial-gradient(circle at top right,rgba(56,189,248,.18),transparent 35%),linear-gradient(135deg,#020617,#0f172a 60%,#111827)}
+.topbar{display:grid;grid-template-columns:1fr 390px;gap:20px;align-items:center;padding:18px 28px;background:rgba(2,6,23,.88);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.brand{display:flex;gap:14px;align-items:center}.logo{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,var(--blue),#2563eb);color:#020617;font-weight:900}
+h1,h2,p{margin-top:0}.brand h1{margin-bottom:5px}.brand p,.muted,.workbar p{color:var(--muted);margin-bottom:0}
+.hud{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.hud div{background:#0f172a;border:1px solid var(--line);border-radius:14px;padding:10px}.hud span{display:block;color:var(--muted);font-size:12px}.hud b{color:var(--blue)}
+.layout{display:grid;grid-template-columns:320px minmax(980px,1fr) 300px;gap:18px;padding:18px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:26px;padding:18px;box-shadow:0 24px 70px rgba(0,0,0,.35)}
+.parts-list{display:grid;gap:12px;margin:16px 0}
+.part{display:grid;grid-template-columns:90px 1fr;gap:12px;align-items:center;padding:12px;border-radius:18px;background:linear-gradient(135deg,#1e293b,#0b1120);border:1px solid rgba(56,189,248,.22);cursor:grab;transition:.2s}
+.part:hover{transform:translateX(-5px);border-color:var(--blue)}.part.dragging{opacity:.45}.part.installed{opacity:.3;pointer-events:none;filter:grayscale(1)}
+.part b{display:block}.part small{color:var(--muted);display:block;margin-top:5px}.thumb{width:88px;height:60px}.thumb svg{width:100%;height:100%;filter:drop-shadow(0 8px 10px rgba(0,0,0,.45))}
+button{border:0;border-radius:14px;padding:11px 14px;background:var(--blue);color:#020617;font-weight:800;cursor:pointer}.wide{width:100%;margin-top:10px}.secondary{background:#334155;color:white}
+.workbar{display:flex;justify-content:space-between;gap:15px;align-items:center}.tools{display:flex;gap:8px;align-items:center}.tools button{background:#1e293b;color:white;border:1px solid var(--line)}#zoomText{color:var(--blue);font-weight:900}
+.progress{height:12px;background:#1e293b;border-radius:99px;overflow:hidden;margin:14px 0 18px}.progress div{height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--green));transition:.3s}
+.stage-wrap{height:850px;overflow:auto;border-radius:28px;padding:24px;background:linear-gradient(145deg,#0a0f1d,#020617);border:3px solid #334155}
+.stage{position:relative;width:1200px;height:850px;margin:auto;transform-origin:top center;transition:.2s}.board{position:absolute;inset:0;width:1200px;height:850px}
+.drop-zone{position:absolute;z-index:4;border:3px dashed rgba(255,255,255,.45);background:rgba(2,6,23,.12);border-radius:16px;display:grid;place-items:center;transition:.2s}
+.drop-zone:before{content:attr(data-label);position:absolute;top:-34px;right:0;background:rgba(15,23,42,.98);border:1px solid var(--line);padding:6px 10px;border-radius:11px;color:#e0f2fe;font-size:13px;white-space:nowrap}
+.drop-zone.locked{opacity:.35;filter:grayscale(.7)}.drop-zone.hover,.drop-zone.available{border-color:var(--blue);box-shadow:0 0 28px rgba(56,189,248,.42);transform:scale(1.02)}
+.drop-zone.correct{border-style:solid;border-color:var(--green);background:rgba(34,197,94,.08);opacity:1;filter:none}.drop-zone.wrong{border-color:var(--red);background:rgba(239,68,68,.22);animation:shake .25s}
+.z-cpu{left:495px;top:250px;width:140px;height:112px}.z-thermal{left:525px;top:284px;width:82px;height:50px;border-radius:999px}
+.z-cooler{left:420px;top:175px;width:290px;height:265px;border-radius:28px;border-color:#22c55e;background:rgba(34,197,94,.08)}
+.z-ram{left:780px;top:115px;width:175px;height:320px}.z-m2{left:390px;top:505px;width:400px;height:64px}.z-gpu{left:245px;top:635px;width:610px;height:56px}.z-psu24{left:1010px;top:175px;width:60px;height:250px}.z-cpu8{left:500px;top:100px;width:130px;height:64px}.z-sata{left:895px;top:545px;width:170px;height:93px}
+.placed{position:absolute;z-index:5;pointer-events:none;display:grid;place-items:center;animation:pop .25s;filter:drop-shadow(0 14px 14px rgba(0,0,0,.55))}.placed svg{width:100%;height:100%}
+.cooler-placed{z-index:7}.cpu-placed{z-index:5}.paste-placed{z-index:6}
+#steps{line-height:2.2;color:#cbd5e1;padding-right:22px}#steps li.done{color:#86efac;text-decoration:line-through}
+.message{padding:14px;border-radius:16px;background:rgba(30,41,59,.9);line-height:1.8;margin-top:16px}.message.success{background:rgba(34,197,94,.16);color:#bbf7d0}.message.error{background:rgba(239,68,68,.16);color:#fecaca}.note{margin-top:16px;padding:14px;border-radius:16px;background:rgba(56,189,248,.1);color:#bae6fd;line-height:1.8}
+.toast{position:fixed;left:24px;bottom:24px;background:rgba(15,23,42,.98);border:1px solid var(--line);border-radius:16px;padding:14px 18px;transform:translateY(150%);transition:.25s;z-index:80}.toast.show{transform:translateY(0)}
+.modal{position:fixed;inset:0;background:rgba(2,6,23,.82);display:grid;place-items:center;z-index:100}.modal.hidden{display:none}.modal-card{width:min(440px,92vw);background:#0f172a;border:1px solid rgba(56,189,248,.35);border-radius:28px;padding:32px;text-align:center}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(8px)}50%{transform:translateX(-8px)}}@keyframes pop{from{transform:scale(.85);opacity:.2}to{transform:scale(1);opacity:1}}
+@media(max-width:1400px){.layout,.topbar{grid-template-columns:1fr}.stage-wrap{overflow:auto}}
+
+
+/* CPU FIX:
+   المبرّد كان فوق منطقة المعالج، لذلك كان يمنع Drop على CPU.
+   الحل: المناطق المقفلة لا تستقبل الماوس، وCPU له أولوية أعلى.
+*/
+.z-cpu {
+  z-index: 30;
+}
+
+.z-thermal {
+  z-index: 28;
+}
+
+.z-cooler {
+  z-index: 20;
+}
+
+.drop-zone.locked {
+  pointer-events: none;
+}
+
+.drop-zone:not(.locked) {
+  pointer-events: auto;
+}
+
+/* عندما يكتمل تركيب CPU والمعجون فقط يصبح مربع المبرّد نشط */
+.z-cooler:not(.locked) {
+  z-index: 32;
+}
+
+/* توضيح بصري */
+.z-cpu:not(.correct) {
+  background: rgba(56, 189, 248, 0.10);
+  border-color: rgba(56, 189, 248, 0.75);
+}
+
+.z-cooler.locked {
+  background: rgba(34, 197, 94, 0.025);
+  border-color: rgba(34, 197, 94, 0.20);
+}
+
+/* THERMAL PASTE FIX:
+   بعد نجاح تركيب أي قطعة، تتوقف منطقتها عن استقبال السحب حتى لا تحجب المرحلة التالية.
+   التسلسل يصبح: CPU -> Thermal Paste -> Cooler.
+*/
+.drop-zone.correct {
+  pointer-events: none !important;
+}
+
+.z-thermal:not(.locked):not(.correct) {
+  z-index: 35;
+  pointer-events: auto;
+  opacity: 1;
+  border-color: #38bdf8;
+  background: rgba(56, 189, 248, 0.14);
+  box-shadow: 0 0 24px rgba(56, 189, 248, 0.28);
+}
+
+.z-cooler:not(.locked):not(.correct) {
+  z-index: 36;
+  pointer-events: auto;
+}
